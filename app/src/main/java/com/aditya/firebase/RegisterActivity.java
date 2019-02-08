@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Button reg_btn;
     private Button reg_login_btn;
+    private ProgressBar regProgress;
 
     private FirebaseAuth mAuth;
 
@@ -39,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         reg_confirm_password_feild = (EditText) findViewById(R.id.regPasswordconfirmFeild);
         reg_btn = (Button) findViewById(R.id.btn_Reg);
         reg_login_btn = (Button) findViewById(R.id.reg_Login_btn);
+        regProgress = (ProgressBar) findViewById(R.id.reg_progressBar);
 
         reg_login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(Confirm_pass)){
 
                     if(pass.equals(Confirm_pass)){
+                        regProgress.setVisibility(View.VISIBLE);
                         mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -69,11 +73,12 @@ public class RegisterActivity extends AppCompatActivity {
                                     String errorMessage = task.getException().getMessage();
                                     Toast.makeText(RegisterActivity.this, "Error : "+errorMessage,Toast.LENGTH_LONG).show();
                                 }
+                                regProgress.setVisibility(View.INVISIBLE);
                             }
                         });
                     }
                     else {
-                        Toast.makeText(RegisterActivity.this, "Password dosent't match !!Please check again.",Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, "Password doesn't match !!Please check again.",Toast.LENGTH_LONG).show();
                     }
                 }
 
